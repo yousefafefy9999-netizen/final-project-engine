@@ -18,6 +18,7 @@ public class mg {
     static double[] user_balances = {20000, 20000, 20000, 20000};
     static boolean[] user_blocked = {false, false, false, false};
     static String[] user_favorites = {"", "", "", ""};
+    static int currentUserIndex = -1; 
     static String UserNameInput;
     static int choice; // the user choice
     static int UserChoice;
@@ -119,10 +120,10 @@ public class mg {
                             addFavorite();
                             break;
                         case 5:
-
+                            removeFavorite();
                             break;
                         case 6:
-
+                           showFavorites();
                             break;
                         case 7:
 
@@ -384,8 +385,8 @@ user_phone=input.nextInt();
         System.out.print("Enter User ID to add to favorites (e.g., U_2): ");
         String target_id = input.nextLine();
 
-        // to be sure  the user does not add themselves.
-        if (target_id.equalsIgnoreCase(user_id[0])) {
+        // to be sure the user does not add themselves
+        if (target_id.equalsIgnoreCase(user_id[currentUserIndex])) {
             System.out.println("Error: You cannot add yourself to favorites.");
             return;
         }
@@ -404,18 +405,59 @@ user_phone=input.nextInt();
             return;
         }
 
-        // Preventing repetition
-        if (user_favorites[0].equalsIgnoreCase(target_id)) {
+      
+        if (user_favorites[currentUserIndex].equalsIgnoreCase(target_id)) {
             System.out.println("Notification: This user is already in your favorites.");
             return;
         }
 
-        user_favorites[0] = user_id[target_index];
+        // Save in the designated field for the current connected user
+        user_favorites[currentUserIndex] = user_id[target_index];
         System.out.println("Successfully added " + user_name[target_index] + " to your favorites!");
     }
 
-
-
+      //-----------------------------------------------------------
+     //-----------------for user panel case 5----------------------
+public static void removeFavorite() {
+    System.out.println("=============== REMOVE FROM FAVORITES ===============");
+    
+    // Retrieve the stored value for the current user
+    String currentFav = user_favorites[currentUserIndex];
+    
+    // First, check if the favorites box is already empty for the current user.
+    if (currentFav == null || currentFav.equals("")) {
+        System.out.println("Error: Your favorites list is already empty.");
+        return;
+    }
+    
+    // Confirm the deletion of the current contact and clear their field only.
+    System.out.println("Removing (User ID: " + currentFav + ") from your favorites...");
+    user_favorites[currentUserIndex] = ""; 
+    System.out.println("Removed successfully.");
+}
+   //-----------------------------------------------------------
+    //-----------------for user panel case 6--------------------
+    public static void showFavorites() {
+        System.out.println("=============== YOUR FAVORITE CONTACTS ===============");
+        
+        // Bring the stored value to the current interest
+        String currentFav = user_favorites[currentUserIndex];
+        
+        // Check if the current user's favorites list is empty
+        if (currentFav == null || currentFav.equals("")) {
+            System.out.println("Your favorites list is currently empty.");
+        } else {
+            // Searching the user array to retrieve and display the data of the owner of this ID
+            for (int i = 0; i < user_id.length; i++) {
+                if (currentFav.equalsIgnoreCase(user_id[i])) {
+                    System.out.println("- ID: " + user_id[i] + " | Name: " + user_name[i] + " | Phone: " + user_phone[i]);
+                    break; 
+                }
+            }
+        }
+        System.out.println("-----------------------------------------------------");
+    }
+       //-----------------------------------------------------------
 
 }
 
